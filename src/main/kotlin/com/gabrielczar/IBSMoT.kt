@@ -9,7 +9,9 @@ import java.util.*
 
 class IBSMoT (private val conn: Connection) : StopMoveAlgorithm {
 
+    // CHECK IF IT IS THE METHOD TO BE USED OR NOT
     /**
+     * SMOT1
      * Finds the stops in a trajectory.
      *
      * @param trajectory        The trajectory being analyzed.
