@@ -2,7 +2,7 @@ package com.gabrielczar
 
 import java.util.*
 
-class ActiveStops {
+class ActiveStop {
     private val stops: Hashtable<Int, StopMap> = Hashtable()
     private val stopsActives: Vector<Stop> = Vector()
 
