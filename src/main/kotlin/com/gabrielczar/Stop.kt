@@ -29,8 +29,35 @@ data class Stop (
         var minTime: Int = 0,
         var tableName: String? = null,
         var amenity: String? = null,
-        var points: Vector<Point> = Vector(),
+        var points: Vector<GPSPoint> = Vector(),
         var pts: Vector<GPSPoint> = Vector(),
-        private var SRID: Int = 0,
-        private var isBuffer: Boolean = false
-)
+        var SRID: Int = 4326,
+        var isBuffer: Boolean = false
+) {
+    fun check(): Boolean {
+        if (pts.size >= 2) { // respecting the minimum stop points
+            val leaveTime : Long = pts.lastElement().time.time
+
+            enterTime?.time?.let { time ->
+                if (leaveTime - time >= (minTime * 1000)) return true
+            }
+        }
+        return false
+    }
+
+    fun addPoint(pt: GPSPoint, rf: String, minTime: Int, gid: Int) {
+        this.tid = pt.tid
+        this.enterTime = pt.time
+
+        this.leaveTime = null
+        this.gid = gid
+        this.tableName = rf
+        this.minTime = minTime
+
+        this.pts.addElement(pt)
+    }
+
+    fun addPoint(pt: GPSPoint) {
+        this.pts.addElement(pt)
+    }
+}
