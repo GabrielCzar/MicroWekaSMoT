@@ -53,6 +53,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- LOGGER -->
+        <dependency>
+            <groupId>io.github.microutils</groupId>
+            <artifactId>kotlin-logging</artifactId>
+            <version>1.5.9</version>
+        </dependency>
     </dependencies>
 
     <build>

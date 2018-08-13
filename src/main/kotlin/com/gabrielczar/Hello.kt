@@ -1,6 +1,10 @@
 package com.gabrielczar
 
+import com.gabrielczar.dao.ConnectionProperties
+
 fun main(args: Array<String>) {
-    println("Hello, World")
+
+    println(ConnectionProperties.driverClass)
+
 }
 

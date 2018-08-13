@@ -12,7 +12,7 @@ class SMoT2 (private val conn : Connection) {
     private val LOGGER : Logger = Logger.getLogger("SMoT_2")
 
     @Throws(SQLException::class)
-    fun run(trajectory: Trajectory, intercepts: InterceptTrajectoryPointsAndRelevantFeatures) {
+    fun run(trajectory: Trajectory, intercepts: InterceptTrajectoryPointsAndRelevantFeatures) : Vector<Stop> {
 
         val tableIdName = "taxiId"
         val tableTimestampName = "date_time"
@@ -103,9 +103,11 @@ class SMoT2 (private val conn : Connection) {
         resultSet.close()
         // SAVE
 
-        saveStopsAndMoves(stops = stops, tableStopName = "SMoT_2_TABLE_STOP_NAME")
+
+        return stops
     }
 
+//    saveStopsAndMoves(stops = stops, tableStopName = "SMoT_2_TABLE_STOP_NAME")
     fun saveStopsAndMoves(tableStopName : String,
                           stops: Vector<Stop>,
                           buffer: Double = 50.0) {
