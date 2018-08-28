@@ -1,10 +1,10 @@
 package com.gabrielczar
 
-import com.gabrielczar.dao.ConnectionProperties
+import com.gabrielczar.dao.ConnectionPool
 
 fun main(args: Array<String>) {
 
-    println(ConnectionProperties.driverClass)
+    println(ConnectionPool.getConnection())
 
 }
 
