@@ -4,12 +4,9 @@ import com.gabrielczar.dao.ConnectionPool
 import com.gabrielczar.domain.*
 import com.gabrielczar.interfaces.SMoT
 import com.vividsolutions.jts.geom.Point
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.sql.Statement
 import java.util.*
 
 /**
@@ -43,7 +40,6 @@ class CBSMoT (private val minTime : Int = 60,
         val sql = "select $tableIdName, $tableSerialName, $tableTimestampName, $tableGeomName from $tableName" +
                 " where $tableIdName=${trajectory.tid} order by time;"
 
-        LOGGER.info("Applying method SMoT...\n$sql")
 
         val resultSet : ResultSet = statement.executeQuery(sql)
         val stops : Vector<Stop> = Vector()
@@ -125,75 +121,4 @@ class CBSMoT (private val minTime : Int = 60,
         return stops
     }
 
-    //    saveStopsAndMoves(stops = stops, tableStopName = "SMoT_2_TABLE_STOP_NAME")
-    fun saveStopsAndMoves(tableStopName : String,
-                          stops: Vector<Stop>,
-                          buffer: Double = 50.0) {
-        var stopId = 0
-
-        for (stop in stops) {
-            try {
-                val s: Statement? = conn?.createStatement()
-
-                val stopName = "stop__${stop.gid}__${stop.amenity}"
-                val sql = "INSERT INTO $tableStopName (tid,stopid,start_time,end_time,stop_gid,stop_name,the_geom,rf,avg) " +
-                        "VALUES (${stop.tid}, $stopId, ${stop.enterTime}, ${stop.leaveTime}', ${stop.gid}, $stopName, " +
-                        "${stopToSql(stop, buffer)}, ${stop.tableName},${stopAvgSpeed(stop)}"
-                stopId++
-
-                s?.execute(sql)
-
-            } catch (e: Exception) {
-                LOGGER.info(e.message)
-                break
-            }
-        }
-    }
-
-    companion object {
-
-        fun stopToSql(stop: Stop, buffer: Double): String {
-            // respecting the minimum of 4 points
-            if (stop.pts.size < 2)
-                return "null"
-
-            var sql = "ST_LineFromText('LINESTRING("
-
-            for (pt in stop.pts) sql += "${pt.point.x}_${pt.point.y},"
-
-            sql = "${sql.substring(0, sql.length - 2)}), ${stop.SRID})"
-
-
-            if (stop.isBuffer) {
-                sql = "ST_Multi(ST_Buffer($sql::geography,$buffer)::geometry)"
-            }
-
-            return sql
-        }
-
-        fun stopAvgSpeed(stop: Stop): Double {
-            var pt: GPSPoint = stop.pts.elementAt(0)
-
-            val initialTime = pt.time.time
-            var sum = 0.0
-
-            for (point in stop.points) {
-                sum += euclideanDistance(pt.point, point.point)
-                pt = point
-            }
-
-            val endingTime = stop.pts.lastElement().time.time
-            val time = endingTime - initialTime
-            return sum / (time / 1000)
-        }
-
-        private fun euclideanDistance(point1: Point, point2: Point): Double {
-            var dist = Math.pow(point2.x - point1.x, 2.0) + Math.pow(point2.y - point1.y, 2.0)
-            dist = Math.sqrt(dist)
-            return dist
-        }
-    }
-
 }
-
-val LOGGER : Logger = LoggerFactory.getLogger(CBSMoT::class.java)

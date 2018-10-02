@@ -10,7 +10,7 @@ class InterceptTrajectoryPointsAndRelevantFeatures (
 ) {
 
     fun isIn(pointGid : Int) : Intercept? {
-        return intercepts.firstOrNull { intercept -> intercept.pointGID == pointGid }
+        return intercepts.firstOrNull { it.pointGID == pointGid }
     }
 
 }

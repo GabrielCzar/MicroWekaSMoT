@@ -5,7 +5,7 @@ import com.vividsolutions.jts.geom.Point
 import java.sql.Timestamp
 
 data class GPSPoint (
-        var time: Timestamp,
+        var timestamp: Timestamp,
         var point: Point,
 
         var tid: Int = 0,
