@@ -1,19 +1,26 @@
-package com.gabrielczar
+package com.gabrielczar.handlers
 
+import com.gabrielczar.dao.ConnectionPool
+import com.gabrielczar.domain.*
+import com.gabrielczar.interfaces.SMoT
 import com.vividsolutions.jts.geom.Point
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import java.sql.Timestamp
 import java.util.*
-import java.util.logging.Logger
 
-class SMoT1 (private val conn : Connection){
-    private val LOGGER = Logger.getLogger("SMoT_1")
+/**
+ * Intersection-Based Stops and Moves of Trajectories
+ * */
+class IBSMoT : SMoT {
+    private val conn : Connection? = ConnectionPool.getConnection()
 
-    // CHECK IF IT IS THE METHOD TO BE USED OR NOT
+
+    override fun run(trajectory: Trajectory, relevantFeatures: Array<AssociatedParameter>) : List<Stop> {
+        TODO("MAKE DEFAULT ALL SMoT's")
+    }
     /**
-     * SMOT1
      * Finds the stops in a trajectory.
      *
      * @param trajectory        The trajectory being analyzed.
@@ -22,7 +29,10 @@ class SMoT1 (private val conn : Connection){
      *
      */
     @Throws(SQLException::class)
-    fun run(trajectory: Trajectory, relevantFeatures: Array<AssociatedParameter>) {
+    fun runner(trajectory: Trajectory, relevantFeatures: Array<AssociatedParameter>) {
+
+        if (conn == null)
+            throw SQLException("Connection failed")
 
         val tableIdName = "taxiId"
         val tableTimestampName = "date_time"

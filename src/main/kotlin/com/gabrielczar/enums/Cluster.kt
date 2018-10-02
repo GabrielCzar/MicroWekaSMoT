@@ -1,4 +1,4 @@
-package com.gabrielczar
+package com.gabrielczar.enums
 
 enum class Cluster {
     NONE,

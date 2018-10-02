@@ -1,6 +1,5 @@
-package com.gabrielczar
+package com.gabrielczar.domain
 
-import com.vividsolutions.jts.geom.Point
 import java.sql.Timestamp
 import java.util.*
 

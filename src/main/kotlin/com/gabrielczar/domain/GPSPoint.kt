@@ -1,5 +1,6 @@
-package com.gabrielczar
+package com.gabrielczar.domain
 
+import com.gabrielczar.enums.Cluster
 import com.vividsolutions.jts.geom.Point
 import java.sql.Timestamp
 

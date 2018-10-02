@@ -1,18 +1,36 @@
-package com.gabrielczar
+package com.gabrielczar.handlers
 
+import com.gabrielczar.dao.ConnectionPool
+import com.gabrielczar.domain.*
+import com.gabrielczar.interfaces.SMoT
 import com.vividsolutions.jts.geom.Point
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.sql.Connection
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 import java.util.*
-import java.util.logging.Logger
 
-class SMoT2 (private val conn : Connection) {
-    private val LOGGER : Logger = Logger.getLogger("SMoT_2")
+/**
+ * Clustering-Based Stops and Moves of Trajectories
+ * */
+class CBSMoT (private val minTime : Int = 60,
+              private val maxSpeed : Double = 1.1,
+              private val maxAvgSpeed : Double = 0.9) : SMoT {
+
+
+    override fun run(trajectory: Trajectory, relevantFeatures: Array<AssociatedParameter>): List<Stop> {
+        TODO("MAKE DEFAULT ALL SMoT's")
+    }
+
+    private val conn : Connection? = ConnectionPool.getConnection()
 
     @Throws(SQLException::class)
-    fun run(trajectory: Trajectory, intercepts: InterceptTrajectoryPointsAndRelevantFeatures) : Vector<Stop> {
+    fun run(trajectory: Trajectory, intercepts: InterceptTrajectoryPointsAndRelevantFeatures) : List<Stop> {
+
+        if (conn == null)
+            throw SQLException("Connection failed")
 
         val tableIdName = "taxiId"
         val tableTimestampName = "date_time"
@@ -107,7 +125,7 @@ class SMoT2 (private val conn : Connection) {
         return stops
     }
 
-//    saveStopsAndMoves(stops = stops, tableStopName = "SMoT_2_TABLE_STOP_NAME")
+    //    saveStopsAndMoves(stops = stops, tableStopName = "SMoT_2_TABLE_STOP_NAME")
     fun saveStopsAndMoves(tableStopName : String,
                           stops: Vector<Stop>,
                           buffer: Double = 50.0) {
@@ -115,7 +133,7 @@ class SMoT2 (private val conn : Connection) {
 
         for (stop in stops) {
             try {
-                val s: Statement = conn.createStatement()
+                val s: Statement? = conn?.createStatement()
 
                 val stopName = "stop__${stop.gid}__${stop.amenity}"
                 val sql = "INSERT INTO $tableStopName (tid,stopid,start_time,end_time,stop_gid,stop_name,the_geom,rf,avg) " +
@@ -123,7 +141,7 @@ class SMoT2 (private val conn : Connection) {
                         "${stopToSql(stop, buffer)}, ${stop.tableName},${stopAvgSpeed(stop)}"
                 stopId++
 
-                s.execute(sql)
+                s?.execute(sql)
 
             } catch (e: Exception) {
                 LOGGER.info(e.message)
@@ -175,4 +193,7 @@ class SMoT2 (private val conn : Connection) {
             return dist
         }
     }
+
 }
+
+val LOGGER : Logger = LoggerFactory.getLogger(CBSMoT::class.java)

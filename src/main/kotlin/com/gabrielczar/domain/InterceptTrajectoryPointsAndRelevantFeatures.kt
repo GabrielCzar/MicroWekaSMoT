@@ -1,4 +1,4 @@
-package com.gabrielczar
+package com.gabrielczar.domain
 
 import java.util.*
 

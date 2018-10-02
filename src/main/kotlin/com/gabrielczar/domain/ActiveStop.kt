@@ -1,4 +1,4 @@
-package com.gabrielczar
+package com.gabrielczar.domain
 
 import java.util.*
 
@@ -38,7 +38,7 @@ class ActiveStop {
      * @param point   is the point candidate to stop
      * @param minTime is the intersection minimum time
      */
-    fun addPoint(point: GPSPoint,  minTime: Int, tableName: String) {
+    fun addPoint(point: GPSPoint, minTime: Int, tableName: String) {
         // stores the gid of the rf that intercepts the point
         val key = point.gid
 

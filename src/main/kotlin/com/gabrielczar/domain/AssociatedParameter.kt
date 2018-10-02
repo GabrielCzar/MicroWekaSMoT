@@ -1,4 +1,4 @@
-package com.gabrielczar
+package com.gabrielczar.domain
 
 data class AssociatedParameter (
     val name: String,
