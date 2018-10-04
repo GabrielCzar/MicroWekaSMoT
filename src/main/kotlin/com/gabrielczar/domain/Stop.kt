@@ -1,6 +1,5 @@
 package com.gabrielczar.domain
 
-import java.sql.Timestamp
 import java.util.*
 
 /**
@@ -22,8 +21,8 @@ import java.util.*
 data class Stop (
         var tid: Int = 0,
         var pk: Int = 0,
-        var enterTime: Timestamp? = null,
-        var leaveTime: Timestamp? = null,
+        var enterTimes: Long = 0,
+        var leaveTimes: Long = 0,
         var gid: Int = 0,
         var minTime: Int = 0,
         var tableName: String? = null,
@@ -33,26 +32,17 @@ data class Stop (
         var SRID: Int = 4326,
         var isBuffer: Boolean = false
 ) {
-    fun check(): Boolean {
-        if (pts.size >= 2) { // respecting the minimum stop points
-            val leaveTime : Long = pts.lastElement().time.time
 
-            enterTime?.time?.let { time ->
-                if (leaveTime - time >= (minTime * 1000)) return true
-            }
-        }
-        return false
-    }
+    // respecting the minimum stop points
+    fun check(): Boolean = pts.size >= 2 && ((pts.lastElement().time - enterTimes) >= (minTime * 1000))
 
     fun addPoint(pt: GPSPoint, rf: String, minTime: Int, gid: Int) {
         this.tid = pt.tid
-        this.enterTime = pt.time
-
-        this.leaveTime = null
+        this.enterTimes = pt.time
+        this.leaveTimes = -1
         this.gid = gid
         this.tableName = rf
         this.minTime = minTime
-
         this.pts.addElement(pt)
     }
 

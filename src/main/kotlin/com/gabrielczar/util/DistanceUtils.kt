@@ -6,7 +6,7 @@ import com.vividsolutions.jts.geom.Point
 import java.sql.Timestamp
 
 
-fun stopAverageSpeed(stop: Stop): Double {
+fun averageSpeed(stop: Stop): Double {
     val gpsPoint: GPSPoint = stop.pts.firstElement()
 
     val initialTime = gpsPoint.timestamp

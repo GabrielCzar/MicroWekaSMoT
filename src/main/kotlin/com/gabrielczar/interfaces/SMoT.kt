@@ -5,5 +5,5 @@ import com.gabrielczar.domain.Stop
 import com.gabrielczar.domain.Trajectory
 
 interface SMoT {
-    fun run (trajectory: Trajectory, relevantFeatures: Array<AssociatedParameter>) : List<Stop>
+    fun run (trajectory: Trajectory, associatedParameters: Array<AssociatedParameter>) : List<Stop>
 }

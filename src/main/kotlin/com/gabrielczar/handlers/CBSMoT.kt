@@ -3,6 +3,7 @@ package com.gabrielczar.handlers
 import com.gabrielczar.dao.ConnectionPool
 import com.gabrielczar.domain.*
 import com.gabrielczar.interfaces.SMoT
+import com.gabrielczar.util.isIn
 import com.vividsolutions.jts.geom.Point
 import java.sql.Connection
 import java.sql.ResultSet
@@ -17,14 +18,14 @@ class CBSMoT (private val minTime : Int = 60,
               private val maxAvgSpeed : Double = 0.9) : SMoT {
 
 
-    override fun run(trajectory: Trajectory, relevantFeatures: Array<AssociatedParameter>): List<Stop> {
+    override fun run(trajectory: Trajectory, associatedParameters: Array<AssociatedParameter>): List<Stop> {
         TODO("MAKE DEFAULT ALL SMoT's")
     }
 
     private val conn : Connection? = ConnectionPool.getConnection()
 
     @Throws(SQLException::class)
-    fun run(trajectory: Trajectory, intercepts: InterceptTrajectoryPointsAndRelevantFeatures) : List<Stop> {
+    fun run(trajectory: Trajectory, intercepts: Vector<Intercept>) : List<Stop> {
 
         if (conn == null)
             throw SQLException("Connection failed")
@@ -55,13 +56,13 @@ class CBSMoT (private val minTime : Int = 60,
             val point = GPSPoint(
                     tid = resultSet.getInt(tableIdName),
                     gid = resultSet.getInt(tableSerialName),
-                    time = resultSet.getTimestamp(tableTimestampName),
+                    time = resultSet.getTimestamp(tableTimestampName).time,
                     point = resultSet.getObject(tableGeomName) as Point
             )
 
             val gidActual = point.gid
 
-            val rfIntercept : Intercept? = intercepts.isIn(point.gid)
+            val rfIntercept : Intercept? = isIn(intercepts.toList(), point.gid)
 
             rfIntercept?.let {
                 if (first) {
@@ -122,3 +123,4 @@ class CBSMoT (private val minTime : Int = 60,
     }
 
 }
+

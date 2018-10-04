@@ -2,7 +2,7 @@ package com.gabrielczar.services
 
 import com.gabrielczar.dao.ConnectionPool
 import com.gabrielczar.domain.Stop
-import com.gabrielczar.util.stopAverageSpeed
+import com.gabrielczar.util.averageSpeed
 import java.sql.Statement
 import java.util.*
 
@@ -17,8 +17,8 @@ fun saveStopsAndMoves(tableStopName : String,
 
             val stopName = "stop__${stop.gid}__${stop.amenity}"
             val sql = "INSERT INTO $tableStopName (tid,stopid,start_time,end_time,stop_gid,stop_name,the_geom,rf,avg) " +
-                    "VALUES (${stop.tid}, $stopId, ${stop.enterTime}, ${stop.leaveTime}', ${stop.gid}, $stopName, " +
-                    "${stopToSql(stop, buffer)}, ${stop.tableName},${stopAverageSpeed(stop)}"
+                    "VALUES (${stop.tid}, $stopId, ${stop.enterTimes}, ${stop.leaveTimes}', ${stop.gid}, $stopName, " +
+                    "${stopToSql(stop, buffer)}, ${stop.tableName},${averageSpeed(stop)}"
             stopId++
 
             s?.execute(sql)

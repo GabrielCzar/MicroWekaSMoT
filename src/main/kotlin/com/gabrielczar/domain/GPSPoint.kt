@@ -2,10 +2,9 @@ package com.gabrielczar.domain
 
 import com.gabrielczar.enums.Cluster
 import com.vividsolutions.jts.geom.Point
-import java.sql.Timestamp
 
 data class GPSPoint (
-        var timestamp: Timestamp,
+        var time : Long = 0,
         var point: Point,
 
         var tid: Int = 0,

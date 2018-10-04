@@ -4,7 +4,6 @@ import java.util.*
 
 class ActiveStop {
     private val stops: Hashtable<Int, StopMap> = Hashtable()
-    private val stopsActives: Vector<Stop> = Vector()
 
     // check if it executed more that one time, maybe this execute redundant actions
     fun beginTime(): Vector<Stop> {
@@ -19,7 +18,7 @@ class ActiveStop {
             stops[key]?.run {
                 if (!added) {
                     stop?.let {
-                        it.leaveTime = it.pts.lastElement().time
+                        it.leaveTimes = it.pts.lastElement().time
                         closedStops.addElement(it)
                     }
                     stops.remove(key)
@@ -50,7 +49,7 @@ class ActiveStop {
         } else {
             Stop(
                     tid = point.tid,
-                    enterTime = point.time,
+                    enterTimes = point.time,
                     gid = point.gid,
                     tableName = tableName,
                     minTime = minTime
